@@ -44,12 +44,15 @@
     <div class="row">
     <%for (var i=0; i<cities.length; i++) {%>
         <div class="listCities">
-
-
             <ul class="list-group">
-                <li class="list-group-item"><span class="city"><%=cities[i].city%></span> <span class="city"><%=cities[i].pictoWeather%></span> <span class="desc"><%=cities[i].description%></span> <span class="label label-warning"><%=cities[i].maxTemp%></span> <span class="label label-default"><%=cities[i].minTemp%></span> <a href=""><span class="glyphicon glyphicon-remove-circle"></span></a></li>
+                <li class="list-group-item">
+                    <span class="city"><%=cities[i].city%></span>
+                    <span class="city"><%=cities[i].pictoWeather%></span>
+                    <span class="desc"><%=cities[i].description%></span>
+                    <span class="label label-warning"><%=cities[i].maxTemp%></span>
+                    <span class="label label-default"><%=cities[i].minTemp%></span>
+                    <a href="./delete?position=<%=[i]%>"><span class="glyphicon glyphicon-remove-circle"></span></a></li>
             </ul>
-
             <%}%>
         </div>
     </div>

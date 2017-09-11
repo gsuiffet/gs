@@ -19,6 +19,11 @@ app.get('/add', function (req, res) {
     res.render("home", {cities: cityList});
 });
 
+app.get('/delete', function (req, res) {
+    cityList.splice(req.query.position, 1);
+    res.render('home', {cities: cityList});
+});
+
 app.listen(8080, function () {
     console.log("Server listening on port 8080");
 });
