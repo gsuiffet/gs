@@ -17,7 +17,7 @@ app.get('/', function (req, res) {
 
 app.get('/add', function (req, res) {
     request("http://api.openweathermap.org/data/2.5/weather?q="+ req.query.city + "+&appid=7a8493c8fbae560841a4fc4b12274eed&lang=fr&units=metric", function(error, response, body) {
-        var body = JSON.parse(body); //affiche l'objet
+        var body = JSON.parse(body); //on passe le string en objet
     /*console.log(req.query.city);
         console.log(body.name);
         console.log(body.weather[0].icon);
@@ -41,6 +41,18 @@ app.get('/add', function (req, res) {
 app.get('/delete', function (req, res) {
     cityList.splice(req.query.position, 1);
     res.render('home', {cities: cityList});
+});
+
+app.get('/updatePosition', function (req, res) {
+    //console.log(req.query.tri[0]);
+    var tri = JSON.parse(req.query.tri);
+    var cityListTmp = [];
+    for (var i=0; i<tri.length; i++ ) {
+        //console.log(cityList[tri[i]]);
+        cityListTmp.push(cityList[tri[i]]);
+    }
+    cityList = cityListTmp;
+    res.send( {data: "hello"});
 });
 
 app.listen(8080, function () {
