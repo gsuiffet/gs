@@ -1,28 +1,34 @@
 var express = require('express');
 var app = express();
 var request = require('request');
+var mongoose = require('mongoose');
 
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
-var cityList = [
-    //{city: "Lyon", pictoWeather:"nuageux", description:"nuageux", maxTemp:"26", minTemp:"17"},
-    //{city: "Paris", pictoWeather:"ciel dégagé", description:"dégagé", maxTemp:"24.3", minTemp:"13.2"},
-    //{city: "Marseille", pictoWeather:"ciel sombre", description:"sombre", maxTemp:"22.4", minTemp:"14"}
-];
+var cityList = mongoose.Schema({
+    city: String,
+    pictoWeather: String,
+    description: String,
+    maxTemp: Number,
+    minTemp: Number,
+    latitude: Number,
+    longitude: Number
+});
+
+cityModel = mongoose.model('citydb', cityList);
 
 app.get('/', function (req, res) {
-    res.render('home', {cities: cityList});
+        cityModel.find(function (err, cityList) {
+            res.render('home', {cities: cityList});
+        });
 });
 
 app.get('/add', function (req, res) {
     request("http://api.openweathermap.org/data/2.5/weather?q="+ req.query.city + "+&appid=7a8493c8fbae560841a4fc4b12274eed&lang=fr&units=metric", function(error, response, body) {
-        var body = JSON.parse(body); //on passe le string en objet
-        /*console.log(req.query.city);
-        console.log(body.name);
-        console.log(body.weather[0].id)
-        console.log(body);*/
-        cityList.push({
+        var body = JSON.parse(body);
+
+        var citydb = new cityModel ({
             city: body.name,
             description: body.weather[0].description,
             pictoWeather: "http://openweathermap.org/img/w/" + body.weather[0].icon + ".png",
@@ -31,15 +37,27 @@ app.get('/add', function (req, res) {
             latitude: body.coord.lat,
             longitude: body.coord.lon
         });
-        res.render("home", {cities: cityList});
+        citydb.save(function (error, cityList) {
+            cityModel.find(function (err, cityList) {
+                res.render("home", {cities: cityList});
+            });
+        });
     });
-    //console.log(cityList);
 });
 
 app.get('/delete', function (req, res) {
-    cityList.splice(req.query.position, 1);
-    res.render('home', {cities: cityList});
+    console.log(req.query);
+    cityModel.remove({city: req.query}, function(error) {
+       // console.log(req.query);
+        console.log();
+        cityModel.find(function (err, cityList) {
+            res.render("home", {cities: cityList});
+        });
+    });
 });
+
+//‘db.test_users.remove({“_id”: { “$oid” : “4d513345cc9374271b02ec6c” }})’
+//cityList.splice(req.query.position, 1)
 
 app.get('/updatePosition', function (req, res) {
     //console.log(req.query.tri[0]);
@@ -48,14 +66,19 @@ app.get('/updatePosition', function (req, res) {
 
     //console.log(tri);
     for (var i=0; i<tri.length; i++ ) {
-        //console.log(cityList[tri[i]]);
+        console.log("liste 1", cityList[tri[i]]);
         cityListTmp.push(cityList[tri[i]]);
         //console.log(tri[i]);
-        console.log(cityList[tri[i]]);
+        console.log("liste 2", cityList[tri[i]]);
     }
     cityList = cityListTmp;
     res.send( {data: "hello"});
 });
+
+mongoose.connect('mongodb://guigui:guigui@ds135394.mlab.com:35394/weatherapp' , function(err) {
+    console.log(err);
+});
+
 
 app.listen(8080, function () {
     console.log("Server listening on port 8080");
