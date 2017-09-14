@@ -46,11 +46,12 @@ app.get('/updatePosition', function (req, res) {
     var tri = JSON.parse(req.query.tri);
     var cityListTmp = [];
 
-
-
+    //console.log(tri);
     for (var i=0; i<tri.length; i++ ) {
         //console.log(cityList[tri[i]]);
         cityListTmp.push(cityList[tri[i]]);
+        //console.log(tri[i]);
+        console.log(cityList[tri[i]]);
     }
     cityList = cityListTmp;
     res.send( {data: "hello"});
