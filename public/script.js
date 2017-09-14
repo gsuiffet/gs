@@ -26,7 +26,7 @@ $("document").ready(function() {
 
    //Leaflet marker
   $(".list-group-item").each(function() {
-      map.setView([$(this).data("positionlat"), $(this).data("positionlon")], 13);//centrer la map
+      map.setView([$(this).data("positionlat"), $(this).data("positionlon")], 13);//centre la map sur chaque dernier élément
       L.marker([$(this).data("positionlat"), $(this).data("positionlon")]).addTo(map)
       //console.log($(this).data("positionlat") +" "+ $(this).data("positionlon"));
           .bindPopup("Latitude: " + $(this).data("positionlat") +" <br> "+ "Longitude: " + $(this).data("positionlon"))
@@ -34,16 +34,10 @@ $("document").ready(function() {
   });
 
   //Leaflet clic sur item pour centrer la map
-
-
   $(".list-group-item").click(function(){
       $("#mapid").val(map.setView([$(this).data("positionlat"), $(this).data("positionlon")], 13));
       $("#mapid").val(L.marker([$(this).data("positionlat"), $(this).data("positionlon")]).addTo(map)
-      //console.log($(this).data("positionlat") +" "+ $(this).data("positionlon"));
           .bindPopup("Latitude: " + $(this).data("positionlat") +" <br> "+ "Longitude: " + $(this).data("positionlon"))
           .openPopup())
-
-      //$("#update-position").val($(this).data("position"));
-
   });
 });
