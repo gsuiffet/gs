@@ -1,42 +1,49 @@
 $("document").ready(function() {
     $( function() {
-        $( "#sortable" ).sortable({
-            //update: action si déplacement uniquement
+        $( "#sortable" ).sortable({ //Jquery UI DragNDrop
             stop: function( event, ui ) {
+                //update: action si déplacement uniquement
+                var sortedIDs = JSON.stringify($( ".list-group" ).sortable( "toArray" )); //-> return un objet
                 //var sortedIDs = $( ".selector" ).sortable( "toArray" );
-                var sortedIDs = JSON.stringify($( ".list-group" ).sortable( "toArray" ));
-                //-> return un objet
-                //-> on transforme un objet en chaine de caractère
                 $.getJSON("./updatePosition?tri="+sortedIDs, function(data) {
-                    //-> on sélectionne une nouvelle chaine de caractère (root)
+                    //$.get("./updatePosition?tri="+sortedIDs, function(data) { //-> on n'utilise pas le retour
                     // (AJAX client/serveur)
-                    // et on injecte la nouvelle chaine
                     console.log(data);
                 });
-
                 console.log(sortedIDs);
             }
         });
         //$( "#sortable" ).disableSelection();
-    } );
+    });
 
-    var map = L.map('mapid').setView([51.505, -0.09], 13);
+    //Leaflet map
+   var map = L.map('mapid');
+   map.setView([51.505, -0.09], 13);
 
-    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
+   L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+       attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+   }).addTo(map);
 
-/*
-  $("li").each(function(i) {
-    console.log(i);
+   //Leaflet marker
+  $(".list-group-item").each(function() {
+      map.setView([$(this).data("positionlat"), $(this).data("positionlon")], 13);//centrer la map
+      L.marker([$(this).data("positionlat"), $(this).data("positionlon")]).addTo(map)
+      //console.log($(this).data("positionlat") +" "+ $(this).data("positionlon"));
+          .bindPopup("Latitude: " + $(this).data("positionlat") +" <br> "+ "Longitude: " + $(this).data("positionlon"))
+          .openPopup()
   });
-  $("li").click(function(){
-    $("#content").html( "<p>new content !!!</p>" );
-    $("#btn-valide").remove();
-    $(this).fadeOut().delay(5000).fadeIn();
+
+  //Leaflet clic sur item pour centrer la map
+
+
+  $(".list-group-item").click(function(){
+      $("#mapid").val(map.setView([$(this).data("positionlat"), $(this).data("positionlon")], 13));
+      $("#mapid").val(L.marker([$(this).data("positionlat"), $(this).data("positionlon")]).addTo(map)
+      //console.log($(this).data("positionlat") +" "+ $(this).data("positionlon"));
+          .bindPopup("Latitude: " + $(this).data("positionlat") +" <br> "+ "Longitude: " + $(this).data("positionlon"))
+          .openPopup())
+
+      //$("#update-position").val($(this).data("position"));
+
   });
-  $.getJSON("http://api.openweathermap.org/data/2.5/weather?q=Lyon&APPID=9b754f1f40051783e4f72c176953866e&units=metric&lang=fr", function(data) {
-    console.log(data);
-  });
-*/
 });
