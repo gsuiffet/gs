@@ -89,6 +89,7 @@ mongoose.connect('mongodb://guigui:guigui@ds135394.mlab.com:35394/weatherapp' , 
     //console.log(err);
 });
 
-app.listen(8080, function () {
+var port= (process.env.PORT || 8080);
+app.listen(port, function () {
     console.log("Server listening on port 8080");
 });
