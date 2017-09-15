@@ -51,7 +51,8 @@
                     <span class="label label-warning"><%=cities[i].maxTemp%>°C</span>
                     <span class="label label-default"><%=cities[i].minTemp%>°C</span>
 
-                    <a href="./delete?position=<%=[i]%>"><span class="glyphicon glyphicon-remove-circle"></span></a>
+                    <a href="./delete?position=<%=cities[i].id%>"><span class="glyphicon glyphicon-remove-circle"></span></a>
+                    <!--<%=console.log("test cities", cities[i].id);%>-->
                 </li>
                 <%}%>
             </ul>
