@@ -17,7 +17,7 @@ var cityList = mongoose.Schema({
     longitude: Number
 });
 
-cityModel = mongoose.model('citydb', cityList);
+var cityModel = mongoose.model('citydb', cityList);
 
 app.get('/', function (req, res) {
         cityModel.find(function (err, cityList) {
@@ -43,7 +43,6 @@ app.get('/add', function (req, res) {
                 longitude: body.coord.lon
             });
             //console.log("New ID",citydb);
-
             citydb.save(function (error, citydb) {
                 cityModel.find(function (err, cityList) {
                     res.render("home", {cities: cityList});
